@@ -1,0 +1,3 @@
+UPManager-api/vendor/
+UPManager-api/node_modules/
+UPManager-api/.env

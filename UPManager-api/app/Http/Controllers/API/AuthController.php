@@ -14,14 +14,25 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
+
             $credentials = $request->validate([
                 'email' => 'required|email', 
                 'password' => 'required|string'
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'error' => $e->getMessage()
+            ], 422);
+        }
+        try {
             
             if (!Auth::attempt($credentials)) {
                return response()->json(
-                    ['message' => 'Invalid credentials'], 
+                    [
+                        'message' => 'Login Failed',
+                        'error' => 'Invalid credentials. Please try again.'
+                    ], 
                     401
                 );
             }

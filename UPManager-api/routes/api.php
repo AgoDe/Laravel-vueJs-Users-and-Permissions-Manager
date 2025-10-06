@@ -11,11 +11,13 @@ Route::group(['namespace' => 'App\Http\Controllers\API'], function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('auth/user', [AuthController::class, 'getUserInfo']);
+        Route::put('auth/user/theme', [UsersController::class, 'updateTheme']);
 
         Route::prefix('users')->group(function () {
             Route::get('/', [UsersController::class, 'index']);
             Route::get('/statistics', [UsersController::class, 'statistics']);
             Route::get('/registration-trends', [UsersController::class, 'registrationTrends']);
+
         });
     });
 });

@@ -101,4 +101,35 @@ class UsersController extends Controller
             ], 422);
         }
     }
+
+    public function updateTheme(Request $request)
+    {
+
+        try {
+            $request->validate([
+                'theme' => 'required|in:light,dark'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Failed to validate request',
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        try {
+            $user = $request->user();
+            $user->theme = $request->theme;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Theme updated successfully',
+                'theme' => $user->theme
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update theme',
+                'error' => $e->getMessage()
+            ], 422);
+        }
+    }
 }

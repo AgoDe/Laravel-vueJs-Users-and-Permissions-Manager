@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, type AxiosResponse, AxiosError } from "axios";
 import alertHelper from "@/helpers/alertHelper";
 import type { ApiResponse } from "@/types/ApiResponse";
-import { useAuthStore } from "@/stores/AuthStore";
+import { useAuthStore } from "@/stores/authStore";
 import router from "@/router";
 
 const baseURL = (import.meta as ImportMeta & { env: { VITE_API_URL: string } })

@@ -38,6 +38,13 @@ class AuthController extends Controller
             }
 
             $user = Auth::user();
+
+            if( $user->account_status !== 'active') {
+                return response()->json([
+                    'message' => 'Login Failed',
+                    'error' => 'Your account is ' . $user->account_status . '. Please contact the administrator.'
+                ], 403);
+            }
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([

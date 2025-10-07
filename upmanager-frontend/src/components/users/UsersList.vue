@@ -22,7 +22,7 @@
                         <th>Role</th>
                         <th>Status</th>
                         <th>Created At</th>
-                        <th>Actions</th>
+                        <th v-if="!authStore.isViewer">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,7 +40,9 @@
                             </v-chip>
                         </td>
                         <td>{{ date.format(user.created_at, "fullDate") }}</td>
-                        <td></td>
+                        <td v-if="!authStore.isViewer">
+                            <UserListItemActions :user="user"></UserListItemActions>
+                        </td>
                     </tr>
 
                 </tbody>
@@ -54,6 +56,7 @@ import { ref, watch } from 'vue';
 import { useUsersStore } from '@/stores/usersStore';
 import { useDate } from 'vuetify';
 import { useAuthStore } from '@/stores/authStore';
+import UserListItemActions from './UserListItemActions.vue';
 
 const authStore = useAuthStore();
 const date = useDate(); 

@@ -41,6 +41,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/settings",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "settings",
+        component: () => import("@/pages/Settings.vue"),
+        meta: { requiresAuth: true, roles: ["admin"] },
+      },
+    ],
+  },
 ];
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

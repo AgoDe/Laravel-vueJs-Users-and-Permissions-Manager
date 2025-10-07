@@ -56,7 +56,11 @@ apiClient.interceptors.response.use(
       } else if (error.response?.status === 403) {
         // Accesso negato (utente loggato ma senza permessi)
         console.error("Errore 403: Accesso negato.");
-        alertHelper.toast('error', (error.response?.data as any)?.message || "Access Denied.");
+        alertHelper.simpleAlert(
+            'error', 
+            (error.response?.data as any)?.message || "Access Denied", 
+            (error.response?.data as any)?.error || "You do not have permission to access this resource."
+          );
       } else {
         console.error("Errore del server: ", error.response?.status);
         console.error("Dettagli errore: ", (error.response?.data as any)?.error);

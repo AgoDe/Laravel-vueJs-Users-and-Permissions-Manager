@@ -19,9 +19,9 @@
             </v-fab>
         </template>
 
-        <v-btn key="1" icon="mdi-account-check" v-tooltip:bottom="'Set Active'" color="success" variant="tonal" @click="openDialog"></v-btn>
-        <v-btn key="2" icon="mdi-account-off" v-tooltip:bottom="'Set Inactive'" color="warning" variant="tonal" @click="openDialog"></v-btn>
-        <v-btn key="3" icon="mdi-delete-alert" v-tooltip:bottom="'Delete'" color="error" variant="tonal" @click="openDialog"></v-btn>
+        <v-btn key="1" icon="mdi-account-check" v-tooltip:bottom="'Set Active'" color="success" variant="elevated" elevation="16" @click="openDialog"></v-btn>
+        <v-btn key="2" icon="mdi-account-off" v-tooltip:bottom="'Set Inactive'" color="warning" variant="elevated" elevation="16" @click="openDialog"></v-btn>
+        <v-btn key="3" icon="mdi-delete-alert" v-tooltip:bottom="'Delete'" color="error" variant="elevated" elevation="16" @click="openDialog"></v-btn>
     </v-speed-dial>
 
     <v-dialog v-model="dialog" max-width="300px">

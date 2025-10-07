@@ -35,8 +35,8 @@ import alertHelper from '@/utils/alertHelper';
 const authStore = useAuthStore();
 
 const isSubmitting = ref(false);
-const username = ref('test@example.com');
-const password = ref('password');
+const username = ref('');
+const password = ref('');
 
 const loginForm = ref();
 

@@ -1,9 +1,9 @@
 // src/stores/auth.ts
 import { defineStore } from 'pinia';
-import apiClient from '@/infrastructure/apiClient';
+import apiClient from '@/utils/apiClient';
 import router from '@/router/index'; 
 import type { User } from '@/types/User';
-import alertHelper from '@/helpers/alertHelper';
+import alertHelper from '@/utils/alertHelper';
 import { consoleError } from 'vuetify/lib/util/console.mjs';
 import { useTheme } from 'vuetify';
 import type { ApiResponse } from '@/types/ApiResponse';

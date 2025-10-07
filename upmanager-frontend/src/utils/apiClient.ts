@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance, type AxiosResponse, AxiosError } from "axios";
-import alertHelper from "@/helpers/alertHelper";
+import alertHelper from "@/utils/alertHelper";
 import type { ApiResponse } from "@/types/ApiResponse";
 import { useAuthStore } from "@/stores/authStore";
 import router from "@/router";

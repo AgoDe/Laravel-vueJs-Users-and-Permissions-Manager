@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
-import alertHelper from '@/helpers/alertHelper';
+import alertHelper from '@/utils/alertHelper';
 
 const authStore = useAuthStore();
 

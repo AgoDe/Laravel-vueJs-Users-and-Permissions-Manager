@@ -19,7 +19,8 @@ class UsersController extends Controller
                 'search' => 'sometimes|string|max:255',
                 'role' => 'sometimes|in:admin,editor,viewer',
                 'status' => 'sometimes|in:active,inactive',
-                'page' => 'sometimes|integer|min:1'
+                'page' => 'sometimes|integer|min:1',
+                'per_page' => 'sometimes|integer|min:1|max:100',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -44,9 +45,14 @@ class UsersController extends Controller
             if ($request->filled('status')) {
                 $query->where('account_status', $request->status);
             }
-    
+            
+            if( $request->filled('per_page') ) {
+                $perPage = (int) $request->per_page;
+            } else {
+                $perPage = 10; // Default items per page
+            }
             // Pagination
-            $users = $query->paginate(10);
+            $users = $query->paginate($perPage);
     
             return response()->json($users);
 

@@ -18,3 +18,12 @@ export interface UsersStatistics {
   editors: number;
   viewers: number;
 }
+
+export interface UsersFilters {
+  search: string | null;
+  role: 'admin' | 'editor' | 'viewer' | null;
+  status: 'active' | 'inactive' | null;
+  sort_by: 'name' | 'email' | 'role' | 'account_status' | 'created_at';
+  sort_order: 'asc' | 'desc';
+
+}

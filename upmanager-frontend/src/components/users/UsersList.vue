@@ -9,7 +9,13 @@
             <v-table>
                 <thead>
                     <tr>
-                        <th></th>
+                        <th v-if="authStore.isAdmin">
+                            <v-checkbox 
+                            hide-details
+                            :indeterminate="usersStore.selectedUsersIds.length > 0 && usersStore.selectedUsersIds.length < usersStore.users.length"
+                            @update:model-value="toggleSelectAll"
+                            />
+                        </th>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
@@ -21,8 +27,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="user in usersStore.users" :key="user.id">
-                        <td>
-                            <v-checkbox :value="user.id" hide-details />
+                        <td v-if="authStore.isAdmin">
+                            <v-checkbox :value="user.id" hide-details v-model="usersStore.selectedUsersIds" />
                         </td>
                         <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
@@ -41,13 +47,26 @@
             </v-table>
         </template>
     </v-list>
+
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useUsersStore } from '@/stores/usersStore';
 import { useDate } from 'vuetify';
+import { useAuthStore } from '@/stores/authStore';
 
-const date = useDate();
+const authStore = useAuthStore();
+const date = useDate(); 
 const usersStore = useUsersStore();
+
+const toggleSelectAll = (value: boolean) => {
+    console.log(value);
+    if (value) {
+        usersStore.selectedUsersIds = usersStore.users.map(user => user.id);
+    } else {
+        usersStore.selectedUsersIds = [];
+    }
+};
+
 
 </script>

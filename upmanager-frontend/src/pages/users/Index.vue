@@ -2,20 +2,36 @@
     <UsersFilters></UsersFilters>
 
     <v-skeleton-loader
-    v-if="loading"
-    :loading="loading"
+    v-if="usersStore.loading"
+    :loading="usersStore.loading"
     type="table" 
     class="mb-3"
     />
-    <UsersList v-else></UsersList>
-    <v-pagination
-        v-if="!loading && usersStore.users.length > 0"
-        v-model="usersStore.filters.page"
-        :length="usersStore.pagination.last_page"
-        class="my-4"
-        color="primary"
-        size="large"
-    ></v-pagination>
+
+    
+    <v-row class="align-center px-3" v-else>
+        <v-col cols="12">
+            <UsersList></UsersList>
+        </v-col>
+        
+        <v-col cols="3">
+            <UsersBulkActions v-if="usersStore.selectedUsersIds.length > 0" :selectedUsersIds="usersStore.selectedUsersIds"></UsersBulkActions>
+        </v-col>
+        <v-col cols="6" class="" >
+            <v-pagination
+                v-if="!loading && usersStore.users.length > 0"
+                v-model="usersStore.filters.page"
+                :length="usersStore.pagination.last_page"
+                class="my-4"
+                color="primary"
+                size="large"
+            ></v-pagination>
+        </v-col>
+
+        <v-col cols="3" class="d-flex justify-end">
+            {{ usersStore.pagination.total }} users found
+        </v-col>   
+    </v-row>
     
 </template>
 
@@ -31,9 +47,8 @@ const loading = ref<boolean>(false);
 watch(
     () => usersStore.filters,
     async () => {
-        loading.value = true;
+        usersStore.selectedUsersIds = [];
         await usersStore.fetchUsers();
-        loading.value = false;
     },
     { deep: true, immediate: true }
 );

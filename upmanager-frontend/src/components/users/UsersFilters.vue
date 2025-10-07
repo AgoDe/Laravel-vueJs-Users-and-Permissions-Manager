@@ -2,6 +2,7 @@
     <v-row>
         <v-col cols="12" md="4">
             <v-text-field
+            :disabled="usersStore.loading"
             variant="solo"
             v-model="searchInput"
             label="Search"
@@ -12,6 +13,7 @@
 
         <v-col cols="6" md="4">
             <v-select
+            :disabled="usersStore.loading"
             label="Role" 
             variant="solo"
             v-model="usersStore.filters.role"
@@ -22,6 +24,7 @@
 
         <v-col cols="6" md="4">
             <v-select 
+            :disabled="usersStore.loading"
             label="Status"
             variant="solo" 
             v-model="usersStore.filters.status"

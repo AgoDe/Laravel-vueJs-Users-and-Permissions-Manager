@@ -14,6 +14,7 @@ interface UsersState {
     },
     filters: UsersFilters,
     loading: boolean,
+    selectedUsersIds: number[],
 
 }
 export const useUsersStore = defineStore('users', {
@@ -35,6 +36,7 @@ export const useUsersStore = defineStore('users', {
             sort_order: 'desc'
         },
         loading: false,
+        selectedUsersIds: [] as number[],
     }),
     actions: {
         async fetchUsers() {

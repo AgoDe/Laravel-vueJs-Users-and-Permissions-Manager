@@ -1,14 +1,14 @@
 <template>
   <v-navigation-drawer
-    class="p-2"
-    left
+    class=""
+    v-model="drawerModel"
     elevation="5"
-    rail-width="80"
     mobile-breakpoint="lg"
+    :temporary="mobile"
     app
-    expand-on-hover
+    :rail="themeStore.sidebarRail && !mobile"
   >
-    <v-list dense nav>
+    <v-list density="comfortable" nav>
       <v-list-item
         link
         :to="{ name: 'dashboard' }"
@@ -29,7 +29,32 @@
       </v-list-item>
     </v-list>
 
-    <template #append>
+    <template v-if="authStore.user && mobile">
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item :title="authStore.user?.name" :subtitle="authStore.user?.role" class="mt-3 mx-2">
+          <template #prepend>
+            <v-avatar size="32" icon="mdi-account">
+            </v-avatar>
+          </template>
+  
+        </v-list-item>
+
+        <v-list-item>
+          <v-btn 
+          prepend-icon="mdi-logout" 
+          color="error" 
+          variant="text" 
+          class="mx-2"
+          @click="authStore.logout()"
+          >logout</v-btn>
+        </v-list-item>
+      </v-list>
+    </template>
+
+
+
+    <template #append v-if="!mobile">
       <v-divider class="mb-3"></v-divider>
       <v-btn
        :color="getThemeColor"
@@ -44,23 +69,30 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore';
-import { useTheme } from 'vuetify'
+import { useUIStore } from '@/stores/uiStore';
+import { useTheme, useDisplay } from 'vuetify'
 import { computed } from 'vue';
+import { useThemeManager } from '@/composables/useThemeManager';
 
 const theme = useTheme()
-
+const themeStore = useUIStore();
 const authStore = useAuthStore();
+const { getThemeIcon, getThemeColor, toggleTheme } = useThemeManager();
+const { mobile } = useDisplay();
 
 
-function toggleTheme() {
-  theme.change(theme.global.name.value === 'light' ? 'dark' : 'light')
-}
-
-const getThemeIcon = computed(() => {
-  return theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-white-balance-sunny'
+const drawerModel = computed({
+  get() {
+    // Su mobile: usa sidebarAppMode
+    // Su desktop: sempre true (ma controllato da rail)
+    return mobile.value ? themeStore.sidebarAppMode : true;
+  },
+  set(value: boolean) {
+    // Solo su mobile può essere chiuso/aperto
+    if (mobile.value) {
+      themeStore.setSidebarAppMode(value);
+    }
+  }
 });
 
-const getThemeColor = computed(() => {
-  return theme.global.name.value === 'light' ? 'blue darken-2' : 'yellow lighten-2'
-});
 </script>

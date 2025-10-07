@@ -19,6 +19,7 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/auth/AccessDenied': RouteRecordInfo<'/auth/AccessDenied', '/auth/AccessDenied', Record<never, never>, Record<never, never>>,
     '/auth/Login': RouteRecordInfo<'/auth/Login', '/auth/Login', Record<never, never>, Record<never, never>>,
     '/users/Index': RouteRecordInfo<'/users/Index', '/users/Index', Record<never, never>, Record<never, never>>,
   }
@@ -36,6 +37,10 @@ declare module 'vue-router/auto-routes' {
   export interface _RouteFileInfoMap {
     'src/pages/index.vue': {
       routes: '/'
+      views: never
+    }
+    'src/pages/auth/AccessDenied.vue': {
+      routes: '/auth/AccessDenied'
       views: never
     }
     'src/pages/auth/Login.vue': {

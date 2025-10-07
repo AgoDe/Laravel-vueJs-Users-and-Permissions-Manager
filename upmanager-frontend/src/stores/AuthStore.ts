@@ -6,6 +6,7 @@ import type { User } from '@/types/User';
 import alertHelper from '@/helpers/alertHelper';
 import { consoleError } from 'vuetify/lib/util/console.mjs';
 import { useTheme } from 'vuetify';
+import type { ApiResponse } from '@/types/ApiResponse';
 
 
 interface AuthState {
@@ -29,7 +30,8 @@ export const useAuthStore = defineStore('auth', {
                 this.isAuthenticated = true;
                 this.user = response.user;
                 this.token = response.access_token;
-                router.push({ name: 'dashboard' });
+                const route = router.currentRoute.value.query.redirect as string || '/';
+                router.push(route);
             } catch (error: any) {
                 this.isAuthenticated = false;
                 this.user = null;
@@ -39,7 +41,8 @@ export const useAuthStore = defineStore('auth', {
 
         async logout() {
             try {
-                await apiClient.post('/logout');
+                const response : ApiResponse= await apiClient.post('/logout');
+                alertHelper.toast('success', response.message || 'Logout successful!');
             } catch (error: any) {
                 console.error("Errore durante il logout:", error);
             } finally {
@@ -67,16 +70,16 @@ export const useAuthStore = defineStore('auth', {
             return response.status === 200 ? true : false;
         },
 
-        async fetchUserInfo() {
+        async checkAuthStatus(): Promise<boolean> {
             try {
-                const response = await apiClient.get('/auth/user');
-                this.user = response.data;
+                const data: any = await apiClient.get('/auth/user');
+                this.isAuthenticated = true;
+                this.user = data?.user ?? data;
                 return true;
-            } catch (error: any) {
-                this.token = null;
+            } catch (error: unknown) {
                 this.isAuthenticated = false;
                 this.user = null;
-                console.error("Errore recupero info utente:", error);
+                this.token = null;
                 return false;
             }
         },

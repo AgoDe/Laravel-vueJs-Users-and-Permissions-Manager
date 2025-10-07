@@ -16,35 +16,17 @@
 
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { onMounted } from 'vue';
 import DefaultHeader from './components/DefaultHeader.vue';
 import DefaultSidebar from './components/DefaultSidebar.vue';
-import { useTheme } from 'vuetify'
 import { useAuthStore } from '@/stores/authStore';
-const theme = useTheme()
-
+import { useThemeManager } from '@/composables/useThemeManager';
 const authStore = useAuthStore();
+const { setTheme } = useThemeManager();
 
-
-function toggleTheme() {
-  theme.change(theme.global.name.value === 'light' ? 'dark' : 'light')
-}
-
-const getThemeIcon = computed(() => {
-  return theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-white-balance-sunny'
+onMounted(() => {
+  if(authStore.user?.theme){
+    setTheme(authStore.user.theme);
+  }
 });
-
-const getThemeColor = computed(() => {
-  return theme.global.name.value === 'light' ? 'blue darken-2' : 'yellow lighten-2'
-});
-
-watch(
-    () => authStore.user?.theme,
-    (newTheme) => {
-        if (newTheme) {
-            theme.change(newTheme || 'light');
-        }
-    },
-    { immediate: true }
-)
 </script>

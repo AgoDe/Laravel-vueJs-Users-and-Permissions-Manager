@@ -19,6 +19,11 @@ export interface UsersStatistics {
   viewers: number;
 }
 
+export interface UsersRegistrationsTrend {
+  date: string; // e.g., '2023-10'
+  count: number;
+}
+
 export interface UsersFilters {
   search: string | null;
   role: 'admin' | 'editor' | 'viewer' | null;

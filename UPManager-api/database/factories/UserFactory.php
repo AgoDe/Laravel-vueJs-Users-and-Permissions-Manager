@@ -31,6 +31,11 @@ class UserFactory extends Factory
             'account_status' => fake()->randomElement(['active', 'inactive']), // statuses: active, inactive
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'created_at' => now()->setDate(
+                now()->year,
+                random_int(1, now()->month),
+                rand(1, now()->day)
+            )->toDateTimeString(),
         ];
     }
 

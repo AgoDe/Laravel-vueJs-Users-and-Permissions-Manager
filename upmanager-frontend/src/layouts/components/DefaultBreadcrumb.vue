@@ -1,6 +1,6 @@
 <template>
 
-<v-breadcrumbs :items="breadcrumbs" class="mb-4">
+<v-breadcrumbs v-if="breadcrumbs.length > 0" :items="breadcrumbs" class="mb-4">
     <template v-slot:divider>
         <v-icon icon="mdi-chevron-right"></v-icon>
     </template>
@@ -15,9 +15,15 @@ const breadcrumb = computed(() => {
     return route.meta.breadcrumb
 })
 
-const breadcrumbs = computed(() => {
+interface BreadcrumbItem {
+    title: string;
+    href: string;
+    disabled: boolean;
+}
+
+const breadcrumbs = computed<BreadcrumbItem[]>(() => {
     console.log("breadcrumb", route.name)
-    const array : { title: string; href: string; disabled: boolean }[] = []
+    const array : BreadcrumbItem[] = []
     if(route.name != "dashboard") {
         array.push({ title: 'Dashboard', href: '/', disabled: false })
     }

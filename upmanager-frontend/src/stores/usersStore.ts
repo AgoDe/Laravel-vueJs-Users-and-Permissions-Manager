@@ -1,4 +1,4 @@
-import type { User, UsersFilters } from "@/types/User";
+import type { User, UsersFilters, UsersRegistrationsTrend, UsersStatistics } from "@/types/User";
 import { defineStore } from "pinia";
 import apiClient from "@/utils/apiClient";
 import type { ApiResponse, PaginatedApiResponse as PaginatedApiResponse } from "@/types/ApiResponse";
@@ -15,6 +15,8 @@ interface UsersState {
     filters: UsersFilters,
     loading: boolean,
     selectedUsersIds: number[],
+    usersStatistics: UsersStatistics | null,
+    usersRegistrationsTrend: UsersRegistrationsTrend[] | null
 
 }
 export const useUsersStore = defineStore('users', {
@@ -37,12 +39,14 @@ export const useUsersStore = defineStore('users', {
         },
         loading: false,
         selectedUsersIds: [] as number[],
+        usersStatistics: null as UsersStatistics | null,
+        usersRegistrationsTrend: null as UsersRegistrationsTrend[] | null
     }),
     actions: {
         async fetchUsers() {
             this.loading = true;
             try {
-                const response : PaginatedApiResponse<User> = await UsersService.fetchUsers(this.filters);
+                const response : PaginatedApiResponse<User> = await UsersService.getUsers(this.filters);
                 this.users = response.data;
                 this.pagination = {
                     current_page: response.current_page,
@@ -56,7 +60,31 @@ export const useUsersStore = defineStore('users', {
             } finally {
                 this.loading = false;
             }
-        }
+        },
+        
+        async fetchUserStatistics() {
+            this.loading = true;
+            try {
+                const response : UsersStatistics = await UsersService.getUsersStatistics();
+                this.usersStatistics = response;
+            } catch (error) {
+                console.error('Error fetching users statistics:', error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchUsersRegistrationsTrend() {
+            this.loading = true;
+            try {
+                const response : UsersRegistrationsTrend[] = await UsersService.getUsersRegistrationsTrend();
+                this.usersRegistrationsTrend = response;
+            } catch (error) {
+                console.error('Error fetching users registrations trend:', error);
+            } finally {
+                this.loading = false;
+            }
+        },
     },
     getters: {
     }

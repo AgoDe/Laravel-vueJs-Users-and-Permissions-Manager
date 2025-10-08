@@ -8,6 +8,7 @@
 import vuetify from './vuetify'
 import router from '../router'
 import piniaPluginPersistedState from 'pinia-plugin-persistedstate'
+import './chartjs';
 
 // Types
 import type { App } from 'vue'

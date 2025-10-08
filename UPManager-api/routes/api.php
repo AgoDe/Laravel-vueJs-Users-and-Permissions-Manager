@@ -16,7 +16,7 @@ Route::group(['namespace' => 'App\Http\Controllers\API'], function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UsersController::class, 'index']);
             Route::get('/statistics', [UsersController::class, 'statistics']);
-            Route::get('/registration-trends', [UsersController::class, 'registrationTrends']);
+            Route::get('/registrations-trend', [UsersController::class, 'registrationsTrend']);
 
         });
     });

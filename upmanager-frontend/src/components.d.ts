@@ -9,11 +9,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    RolePieChart: typeof import('./components/users/RolePieChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserActiveDoughnutChart: typeof import('./components/users/UserActiveDoughnutChart.vue')['default']
     UserListItemActions: typeof import('./components/users/UserListItemActions.vue')['default']
     UsersBulkActions: typeof import('./components/users/UsersBulkActions.vue')['default']
     UsersFilters: typeof import('./components/users/UsersFilters.vue')['default']
     UsersList: typeof import('./components/users/UsersList.vue')['default']
+    UserTrendRegistrationBarChart: typeof import('./components/users/UserTrendRegistrationBarChart.vue')['default']
   }
 }

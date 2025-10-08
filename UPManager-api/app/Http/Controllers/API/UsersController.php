@@ -90,13 +90,13 @@ class UsersController extends Controller
         }
     }
 
-    public function registrationTrends()
+    public function registrationsTrend()
     {
         try {
             $trends = User::selectRaw("TO_CHAR(created_at, 'YYYY-MM') as month, COUNT(*) as count")
                           ->where('created_at', '>=', now()->subMonths(3)->startOfMonth())
                           ->groupBy('month')
-                          ->orderBy('month', 'desc')
+                          ->orderBy('month', 'asc')
                           ->get();
 
             return response()->json($trends);

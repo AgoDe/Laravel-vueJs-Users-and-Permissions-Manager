@@ -1,0 +1,33 @@
+<template>
+
+<v-breadcrumbs :items="breadcrumbs" class="mb-4">
+    <template v-slot:divider>
+        <v-icon icon="mdi-chevron-right"></v-icon>
+    </template>
+</v-breadcrumbs>
+</template>
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+const breadcrumb = computed(() => {
+    return route.meta.breadcrumb
+})
+
+const breadcrumbs = computed(() => {
+    console.log("breadcrumb", route.name)
+    const array : { title: string; href: string; disabled: boolean }[] = []
+    if(route.name != "dashboard") {
+        array.push({ title: 'Dashboard', href: '/', disabled: false })
+    }
+
+    if (route.meta.breadcrumb) {
+        array.push({ title: route.meta.breadcrumb as string, href: route.path, disabled: true })
+    }
+    return array;
+});
+
+
+
+</script>

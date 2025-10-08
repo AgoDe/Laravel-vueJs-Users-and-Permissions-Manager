@@ -9,6 +9,7 @@
         
         <v-main class="v-main">
             <v-container fluid class="page-wrapper">
+                <DefaultBreadcrumb />
                 <RouterView />
             </v-container>
         </v-main>
@@ -19,6 +20,7 @@
 import { onMounted } from 'vue';
 import DefaultHeader from './components/DefaultHeader.vue';
 import DefaultSidebar from './components/DefaultSidebar.vue';
+import DefaultBreadcrumb from './components/DefaultBreadcrumb.vue';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeManager } from '@/composables/useThemeManager';
 const authStore = useAuthStore();

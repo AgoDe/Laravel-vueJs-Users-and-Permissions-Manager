@@ -37,7 +37,10 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "users-index",
         component: () => import("@/pages/users/Index.vue"),
-        meta: { requiresAuth: true },
+        meta: { 
+          requiresAuth: true,
+          breadcrumb: "Users"
+        },
       },
     ],
   },
@@ -49,7 +52,11 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "settings",
         component: () => import("@/pages/Settings.vue"),
-        meta: { requiresAuth: true, roles: ["admin"] },
+        meta: {
+          breadcrumb: "Settings",
+          requiresAuth: true, 
+          roles: ["admin"] 
+        },
       },
     ],
   },

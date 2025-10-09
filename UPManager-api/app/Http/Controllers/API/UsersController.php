@@ -3,31 +3,28 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserAsAdminRequest;
+use App\Http\Requests\UpdateUserAsEditorRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class UsersController extends Controller
 {
     /**
-     * Display a listing of the users with filters and pagination.
+     * return a listing of the users with filters and pagination.
      */
     public function index(Request $request)
     {
 
-        try {
-            $request->validate([
-                'search' => 'sometimes|string|max:255',
-                'role' => 'sometimes|in:admin,editor,viewer',
-                'status' => 'sometimes|in:active,inactive',
-                'page' => 'sometimes|integer|min:1',
-                'per_page' => 'sometimes|integer|min:1|max:100',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'message' => 'Failed to validate request',
-                'errors' => $e->errors()
-            ], 422);
-        }
+        $request->validate([
+            'search' => 'sometimes|string|max:255',
+            'role' => 'sometimes|in:admin,editor,viewer',
+            'status' => 'sometimes|in:active,inactive',
+            'page' => 'sometimes|integer|min:1',
+            'per_page' => 'sometimes|integer|min:1|max:100',
+        ]);
 
         try {
             $query = User::query();
@@ -64,6 +61,105 @@ class UsersController extends Controller
         }
     }
 
+    public function store(CreateUserRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        try {
+            $user = User::create($validatedData);
+
+            return response()->json([
+                'message' => 'User created successfully',
+                'user' => $user
+            ], 201);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create user',
+                'error' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /*
+    * update user as admin (can update all fields ). 
+     */
+    public function updateAsAdmin($id, UpdateUserAsAdminRequest $request)
+    {
+
+        $validateData = $request->validated();
+        
+        try {    
+            $user = User::findOrFail($id);
+
+            $user->name = $validateData['name'];
+            $user->email = $validateData['email'];
+            $user->role = $validateData['role'];
+            $user->account_status = $validateData['account_status'];
+
+            $user->save();
+
+            return response()->json([
+                'message' => 'User updated successfully',
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update user',
+                'error' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /*
+    * update user as editor (can update only name and email). 
+     */
+    public function updateAsEditor($id, UpdateUserAsEditorRequest $request)
+    {
+        $validateData = $request->validated();
+
+        try {
+            $user = User::findOrFail($id);
+
+            $user->name = $validateData['name'];
+            $user->email = $validateData['email'];
+
+            $user->save();
+
+            return response()->json([
+                'message' => 'User updated successfully',
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update user',
+                'error' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            return response()->json([
+                'message' => 'User deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete user',
+                'error' => $e->getMessage()
+            ], 422);
+        }
+    }
+
+
+
+    /*
+    * return user statistics, number of active/inactive users, roles distribution and users total count. 
+     */
     public function statistics()
     {
         try {
@@ -90,6 +186,9 @@ class UsersController extends Controller
         }
     }
 
+    /* 
+    * return the number of user registrations per month for the last 3 months.   
+    */
     public function registrationsTrend()
     {
         try {
@@ -108,19 +207,14 @@ class UsersController extends Controller
         }
     }
 
+    /* 
+    * update the theme preference of the authenticated user.   
+    */
     public function updateTheme(Request $request)
     {
-
-        try {
-            $request->validate([
-                'theme' => 'required|in:light,dark'
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'message' => 'Failed to validate request',
-                'errors' => $e->errors()
-            ], 422);
-        }
+        $request->validate([
+            'theme' => 'required|in:light,dark'
+        ]);
 
         try {
             $user = $request->user();

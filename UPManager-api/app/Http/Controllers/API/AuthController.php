@@ -13,21 +13,15 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        try {
 
-            $credentials = $request->validate([
-                'email' => 'required|email', 
-                'password' => 'required|string'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'error' => $e->getMessage()
-            ], 422);
-        }
+        $credentials = $request->validate([
+            'email' => 'required|email', 
+            'password' => 'required|string'
+        ]);
+       
         try {
             
-            if (!Auth::attempt($credentials)) {
+            if (!Auth::guard('web')->attempt($credentials)) {
                return response()->json(
                     [
                         'message' => 'Login Failed',
@@ -37,7 +31,7 @@ class AuthController extends Controller
                 );
             }
 
-            $user = Auth::user();
+            $user = Auth::guard('web')->user();
 
             if( $user->account_status !== 'active') {
                 return response()->json([

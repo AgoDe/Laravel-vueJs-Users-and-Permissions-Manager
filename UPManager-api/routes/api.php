@@ -18,6 +18,16 @@ Route::group(['namespace' => 'App\Http\Controllers\API'], function () {
             Route::get('/statistics', [UsersController::class, 'statistics']);
             Route::get('/registrations-trend', [UsersController::class, 'registrationsTrend']);
 
+            Route::middleware('role:admin')->group(function () {
+                Route::post('/', [UsersController::class, 'store']);
+                Route::put('/{id}', [UsersController::class, 'updateAsAdmin']);
+                Route::delete('/{id}', [UsersController::class, 'destroy']);
+            });
+
+            Route::middleware('role:admin,editor')->group(function () {
+                Route::patch('/{id}', [UsersController::class, 'updateAsEditor']);
+                
+            });
         });
     });
 });

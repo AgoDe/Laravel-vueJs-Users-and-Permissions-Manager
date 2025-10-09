@@ -22,15 +22,15 @@
 </v-row>
 <v-row class="">
 
-    <v-col >
+    <v-col cols="12" lg="4">
         <UserTrendRegistrationBarChart :force-fetch="false" />
     </v-col>
 
-    <v-col>
+    <v-col cols="12" lg="4">
         <RolePieChart :force-fetch="false"/>
     </v-col>
 
-    <v-col >
+    <v-col cols="12" lg="4">
         <UserActiveDoughnutChart :force-fetch="false" />
     </v-col>
 </v-row>

@@ -18,6 +18,7 @@ const props = defineProps({
         default: true
     }
 });
+
 const chartData = computed(() => ({
     labels: ["Admins", "Editors", "Viewers"],
     datasets: [{

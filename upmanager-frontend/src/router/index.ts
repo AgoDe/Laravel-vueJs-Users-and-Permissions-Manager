@@ -40,7 +40,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: "",
         name: "users-index",
-        component: () => import("@/pages/users/Index.vue"),
+        components: {
+          default: () => import("@/pages/users/Index.vue"),
+          actions: () => import("@/components/users/CreateUserButton.vue"),
+        },
         meta: { 
           requiresAuth: true,
           breadcrumb: "Users"

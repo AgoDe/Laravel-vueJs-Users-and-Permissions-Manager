@@ -46,6 +46,14 @@
         <template v-if="!mobile">
             <router-view name="header"></router-view>
             <v-spacer></v-spacer>
+            <v-btn
+            rounded="lg"
+            :color="getThemeColor"
+            :icon="getThemeIcon"
+            class="me-3"
+            @click="toggleTheme"
+            ></v-btn>
+
             <v-list-item :title="authStore.user?.name" :subtitle="authStore.user?.role" class="me-2"></v-list-item>
             <v-btn 
             @click="authStore.logout()"

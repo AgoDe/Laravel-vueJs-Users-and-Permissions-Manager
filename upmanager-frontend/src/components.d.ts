@@ -8,10 +8,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CreateUserButton: typeof import('./components/users/CreateUserButton.vue')['default']
     RolePieChart: typeof import('./components/users/RolePieChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     UserActiveDoughnutChart: typeof import('./components/users/UserActiveDoughnutChart.vue')['default']
+    UserForm: typeof import('./components/users/UserForm.vue')['default']
     UserListItemActions: typeof import('./components/users/UserListItemActions.vue')['default']
     UsersBulkActions: typeof import('./components/users/UsersBulkActions.vue')['default']
     UsersFilters: typeof import('./components/users/UsersFilters.vue')['default']

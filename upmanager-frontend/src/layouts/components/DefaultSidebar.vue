@@ -62,16 +62,6 @@
         
       </v-list>
     </template>
-
-    <template #append v-if="!mobile">
-      <v-divider class="mb-3"></v-divider>
-      <v-btn
-        :color="getThemeColor"
-        :icon="getThemeIcon"
-        class="ma-4"
-        @click="toggleTheme"
-      ></v-btn>
-    </template>
   </v-navigation-drawer>
 </template>
 

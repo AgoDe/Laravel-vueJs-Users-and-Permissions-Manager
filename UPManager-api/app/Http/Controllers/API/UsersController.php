@@ -31,8 +31,11 @@ class UsersController extends Controller
     
             // Apply filters
             if ($request->filled('search')) {
-                $query->where('name', 'like', '%' . $request->search . '%')
-                      ->orWhere('email', 'like', '%' . $request->search . '%');
+                $search = strtolower($request->search); // Converti in lowercase
+                $query->where(function ($q) use ($search) {
+                    $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ["%{$search}%"]);
+                });
             }
     
             if ($request->filled('role')) {
@@ -43,10 +46,17 @@ class UsersController extends Controller
                 $query->where('account_status', $request->status);
             }
             
+            if($request->filled('sort_by') && in_array($request->sort_by, ['name', 'email', 'role', 'account_status', 'created_at'])) {
+                $sortOrder = $request->filled('sort_order') && in_array(strtolower($request->sort_order), ['asc', 'desc']) ? strtolower($request->sort_order) : 'asc';
+                $query->orderBy($request->sort_by, $sortOrder);
+            } else {
+                $query->orderBy('created_at', 'desc');
+            }
+
             if( $request->filled('per_page') ) {
                 $perPage = (int) $request->per_page;
             } else {
-                $perPage = 10; // Default items per page
+                $perPage = 10;
             }
             // Pagination
             $users = $query->paginate($perPage);

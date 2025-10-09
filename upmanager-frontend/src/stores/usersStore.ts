@@ -39,8 +39,8 @@ export const useUsersStore = defineStore('users', {
                 per_page: 10,
                 role: null,
                 status: null,
-                sort_by: 'created_at',
-                sort_order: 'desc'
+                sort_by: 'name',
+                sort_order: 'asc'
             },
             loading: false,
         },

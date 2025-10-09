@@ -2,8 +2,8 @@
     <UsersFilters></UsersFilters>
 
     <v-skeleton-loader
-    v-if="usersStore.loading"
-    :loading="usersStore.loading"
+    v-if="usersStore.users.loading"
+    :loading="usersStore.users.loading"
     type="table" 
     class="mb-3"
     />
@@ -19,9 +19,9 @@
         </v-col>
         <v-col cols="6" class="" >
             <v-pagination
-                v-if="!loading && usersStore.users.length > 0"
-                v-model="usersStore.filters.page"
-                :length="usersStore.pagination.last_page"
+                v-if="!loading && usersStore.users.data.length > 0"
+                v-model="usersStore.users.filters.page"
+                :length="usersStore.users.pagination.last_page"
                 class="my-4"
                 color="primary"
                 size="large"
@@ -29,7 +29,7 @@
         </v-col>
 
         <v-col cols="3" class="d-flex justify-end">
-            {{ usersStore.pagination.total }} users found
+            {{ usersStore.users.pagination.total }} users found
         </v-col>   
     </v-row>
     
@@ -39,17 +39,23 @@
 import UsersFilters from '@/components/users/UsersFilters.vue';
 import UsersList from '@/components/users/UsersList.vue';
 import { useUsersStore } from '@/stores/usersStore';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const usersStore = useUsersStore();
 const loading = ref<boolean>(false);
 
+
+onMounted(async () => {
+    // fetch using cache
+    await usersStore.fetchUsers();
+});
 watch(
-    () => usersStore.filters,
+    () => usersStore.users.filters,
     async () => {
         usersStore.selectedUsersIds = [];
-        await usersStore.fetchUsers();
+        // force refresh with actual filters
+        await usersStore.fetchUsers(true);
     },
-    { deep: true, immediate: true }
+    { deep: true }
 );
 </script>

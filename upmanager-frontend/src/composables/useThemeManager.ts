@@ -10,11 +10,13 @@ export function useThemeManager() {
     const currentTheme = theme.global.name.value as 'light' | 'dark';
     
     async function toggleTheme() {
-        theme.change(theme.global.name.value === 'light' ? 'dark' : 'light');
-        
+  
+        const newTheme = theme.global.name.value === 'light' ? 'dark' : 'light';
+        theme.change(newTheme);
+       
         if (authStore.isAuthenticated) {
-            const newTheme = theme.global.name.value === 'light' ? 'dark' : 'light';
             await authStore.updateTheme(newTheme);
+
         }
     }
 

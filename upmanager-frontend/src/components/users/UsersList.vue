@@ -1,6 +1,6 @@
 <template>
     <v-list>
-        <template v-if="usersStore.users.length === 0">
+        <template v-if="usersStore.users.data.length === 0">
             <v-list-item>
                 <v-list-item-title>Nessun utente trovato.</v-list-item-title>
             </v-list-item>
@@ -26,7 +26,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in usersStore.users" :key="user.id">
+                    <tr v-for="user in usersStore.users.data" :key="user.id">
                         <td v-if="authStore.isAdmin">
                             <v-checkbox :value="user.id" hide-details v-model="usersStore.selectedUsersIds" />
                         </td>
@@ -65,7 +65,7 @@ const usersStore = useUsersStore();
 const toggleSelectAll = (value: boolean) => {
     console.log(value);
     if (value) {
-        usersStore.selectedUsersIds = usersStore.users.map(user => user.id);
+        usersStore.selectedUsersIds = usersStore.users.data.map(user => user.id);
     } else {
         usersStore.selectedUsersIds = [];
     }

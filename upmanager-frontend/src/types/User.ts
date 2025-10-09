@@ -20,7 +20,7 @@ export interface UsersStatistics {
 }
 
 export interface UsersRegistrationsTrend {
-  date: string; // e.g., '2023-10'
+  month: string; // e.g., '2023-10'
   count: number;
 }
 

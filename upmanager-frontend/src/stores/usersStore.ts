@@ -4,8 +4,11 @@ import apiClient from "@/utils/apiClient";
 import type { ApiResponse, PaginatedApiResponse as PaginatedApiResponse } from "@/types/ApiResponse";
 import { UsersService } from "@/services/usersService";
 
+const CACHE_DURATION = parseInt(import.meta.env.VITE_APP_API_CACHE_DURATION) || 5; // in minutes
+
 interface UsersState {
     users: User[],
+    lastFetch: Date | null,
     pagination: {
         current_page: number,
         per_page: number,
@@ -21,70 +24,103 @@ interface UsersState {
 }
 export const useUsersStore = defineStore('users', {
     state: () => ({
-        users: [] as User[],
-        pagination: {
-            current_page: 1,
-            per_page: 10,
-            total: 0,
-            last_page: 0,
+        users: {
+            data: [] as User[],
+            lastFetch: null as number | null,
+            pagination: {
+                current_page: 1,
+                per_page: 10,
+                total: 0,
+                last_page: 0,
+            },
+            filters : {
+                search: null as string | null,
+                page: 1,
+                per_page: 10,
+                role: null,
+                status: null,
+                sort_by: 'created_at',
+                sort_order: 'desc'
+            },
+            loading: false,
         },
-        filters : {
-            search: null as string | null,
-            page: 1,
-            per_page: 10,
-            role: null,
-            status: null,
-            sort_by: 'created_at',
-            sort_order: 'desc'
+        usersStatistics: {
+            data: null as UsersStatistics | null,
+            lastFetch: null as number | null,
+            loading: false,
         },
-        loading: false,
+        usersRegistrationsTrend: {
+            data: null as UsersRegistrationsTrend[] | null,
+            lastFetch: null as number | null,
+            loading: false,
+        },
         selectedUsersIds: [] as number[],
-        usersStatistics: null as UsersStatistics | null,
-        usersRegistrationsTrend: null as UsersRegistrationsTrend[] | null
     }),
     actions: {
-        async fetchUsers() {
-            this.loading = true;
+        async fetchUsers(forceRefresh = false) {
+
+            // Use cache if available and not expired
+            console.log("Checking cache:", { lastFetch: this.users.lastFetch, isCacheExpired: this.isUsersCacheExpired(), forceRefresh });
+            if (this.users.data.length && !forceRefresh && !this.isUsersCacheExpired()) return
+            
+            this.users.loading = true;
+
             try {
-                const response : PaginatedApiResponse<User> = await UsersService.getUsers(this.filters);
-                this.users = response.data;
-                this.pagination = {
+                const response : PaginatedApiResponse<User> = await UsersService.getUsers(this.users.filters);
+                this.users.data = response.data;
+                this.users.pagination = {
                     current_page: response.current_page,
                     per_page: response.per_page,
                     total: response.total,
                     last_page: response.last_page
                 };
+                this.users.lastFetch = Date.now();
 
             } catch (error) {
                 console.error('Error fetching users:', error);
             } finally {
-                this.loading = false;
-            }
-        },
-        
-        async fetchUserStatistics() {
-            this.loading = true;
-            try {
-                const response : UsersStatistics = await UsersService.getUsersStatistics();
-                this.usersStatistics = response;
-            } catch (error) {
-                console.error('Error fetching users statistics:', error);
-            } finally {
-                this.loading = false;
+                this.users.loading = false;
             }
         },
 
-        async fetchUsersRegistrationsTrend() {
-            this.loading = true;
+        async fetchUsersStatistics(forceRefresh = false) : Promise<void> {
+            if (!forceRefresh && !this.isUsersStatisticsCacheExpired()) return;
+            this.usersStatistics.loading = true;
+            try {
+                const response : UsersStatistics = await UsersService.getUsersStatistics();
+                this.usersStatistics.data = response;
+                this.usersStatistics.lastFetch = Date.now();
+            } catch (error) {
+                console.error('Error fetching users statistics:', error);
+            } finally {
+                this.usersStatistics.loading = false;
+            }
+        },
+
+        async fetchUsersRegistrationsTrend(forceRefresh = false) : Promise<void> {
+            if (!forceRefresh && !this.isUsersRegistrationsTrendCacheExpired()) return;
+
+            this.usersRegistrationsTrend.loading = true;
             try {
                 const response : UsersRegistrationsTrend[] = await UsersService.getUsersRegistrationsTrend();
-                this.usersRegistrationsTrend = response;
+                this.usersRegistrationsTrend.data = response;
+                this.usersRegistrationsTrend.lastFetch = Date.now();
             } catch (error) {
                 console.error('Error fetching users registrations trend:', error);
             } finally {
-                this.loading = false;
+                this.usersRegistrationsTrend.loading = false;
             }
         },
+
+        isUsersCacheExpired() : boolean {
+            return !this.users.lastFetch || (Date.now() - this.users.lastFetch > CACHE_DURATION * 60 * 1000);
+        },
+        isUsersStatisticsCacheExpired() : boolean {
+            return !this.usersStatistics.lastFetch || (Date.now() - this.usersStatistics.lastFetch > CACHE_DURATION * 60 * 1000);
+        },
+        isUsersRegistrationsTrendCacheExpired() : boolean {
+            return !this.usersRegistrationsTrend.lastFetch || (Date.now() - this.usersRegistrationsTrend.lastFetch > CACHE_DURATION * 60 * 1000);
+        }
     },
     getters: {
     }

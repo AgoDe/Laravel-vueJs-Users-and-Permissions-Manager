@@ -1,5 +1,5 @@
 <template>
-    <v-card title="User Registrations Trends" elevation="10">
+    <v-card title="User Registrations Trends" elevation="10" :loading="usersStore.usersRegistrationsTrend.loading">
 
         <template #text>
             <Bar :data="chartData" :options="chartOptions"></Bar>
@@ -15,6 +15,12 @@ import dayjs from 'dayjs';
 
 const usersStore = useUsersStore();
 
+const props = defineProps({
+    forceFetch: {
+        type: Boolean,
+        default: true
+    }
+});
 const chartOptions = {
     responsive: true,
     plugins: {
@@ -25,7 +31,7 @@ const chartOptions = {
 };
 const chartData = computed(() => {
 
-    if(!usersStore.usersRegistrationsTrend || usersStore.usersRegistrationsTrend.length === 0) {
+    if(!usersStore.usersRegistrationsTrend || usersStore.usersRegistrationsTrend.data?.length === 0) {
         return {
             labels: [],
             datasets: []
@@ -33,11 +39,9 @@ const chartData = computed(() => {
     }
 
     const colors =  ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
-    const labels = usersStore.usersRegistrationsTrend.map(item => dayjs(item.month).format('MMMM YYYY'));
-    const data = usersStore.usersRegistrationsTrend.map(item => item.count);
-    const backgrounds = colors.slice(0, data.length);
-    console.log(usersStore.usersRegistrationsTrend)
-    console.log(labels)
+    const labels = usersStore.usersRegistrationsTrend.data?.map(item => dayjs(item.month).format('MMMM YYYY'));
+    const data = usersStore.usersRegistrationsTrend.data?.map(item => item.count);
+    const backgrounds = colors.slice(0, data?.length);
     
     return {
         labels,
@@ -52,5 +56,8 @@ const chartData = computed(() => {
 })
 
 onMounted( async () => {
+    if(props.forceFetch) {
+        await usersStore.fetchUsersRegistrationsTrend();
+    }
 })
 </script>

@@ -7,6 +7,10 @@ import { useAuthStore } from "@/stores/authStore";
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/pages/Error404.vue')
+  },
+  {
     path: "/login",
     name: "login",
     component: () => import("@/pages/auth/Login.vue"),

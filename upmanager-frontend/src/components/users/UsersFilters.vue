@@ -2,7 +2,7 @@
     <v-row>
         <v-col cols="12" md="4">
             <v-text-field
-            :disabled="usersStore.loading"
+            :disabled="usersStore.users.loading"
             variant="solo"
             v-model="searchInput"
             label="Search"
@@ -13,10 +13,10 @@
 
         <v-col cols="6" md="4">
             <v-select
-            :disabled="usersStore.loading"
+            :disabled="usersStore.users.loading"
             label="Role" 
             variant="solo"
-            v-model="usersStore.filters.role"
+            v-model="usersStore.users.filters.role"
             :items="roleOptions"
             >
             </v-select>
@@ -24,10 +24,10 @@
 
         <v-col cols="6" md="4">
             <v-select 
-            :disabled="usersStore.loading"
+            :disabled="usersStore.users.loading"
             label="Status"
             variant="solo" 
-            v-model="usersStore.filters.status"
+            v-model="usersStore.users.filters.status"
             :items="statusOptions"
             >
             </v-select>
@@ -43,14 +43,14 @@ const usersStore = useUsersStore();
 
 
 const throttleSearch = throttle((newValue: string) => {
-    usersStore.filters.search = newValue;
+    usersStore.users.filters.search = newValue;
 }, 500);
 
 const searchInput = computed({
-    get: () => usersStore.filters.search,
+    get: () => usersStore.users.filters.search,
     set: (value: string) => {
         if(value === '') {
-            usersStore.filters.search = null;
+            usersStore.users.filters.search = null;
             return;
         }
         throttleSearch(value);

@@ -9,10 +9,11 @@
 <v-row>
 
     <v-col >
-        <v-card :title="'Total Users'" elevation="10" class="pa-4 text-center">
-            <div class="text-h2 font-weight-bold">
-                {{ usersStore.usersStatistics ? usersStore.usersStatistics.total_users : 0 }}
+        <v-card :title="'Total Users'" elevation="10" class="pa-4 text-center" :loading="usersStore.usersStatistics.loading">
+            <div class="text-h2 font-weight-bold" v-if="!usersStore.usersStatistics.loading">
+                {{ usersStore.usersStatistics ? usersStore.usersStatistics.data?.total_users : 0 }}
             </div>
+            <v-progress-circular v-else indeterminate :size="50"></v-progress-circular>
             <div class="text-subtitle-1">
                 Total registered users
             </div>
@@ -22,15 +23,15 @@
 <v-row class="">
 
     <v-col >
-        <UserTrendRegistrationBarChart v-if="!usersStore.loading && usersStore.usersStatistics" />
+        <UserTrendRegistrationBarChart :force-fetch="false" />
     </v-col>
 
     <v-col>
-        <RolePieChart v-if="!usersStore.loading && usersStore.usersStatistics" />
+        <RolePieChart :force-fetch="false"/>
     </v-col>
 
     <v-col >
-        <UserActiveDoughnutChart v-if="!usersStore.loading && usersStore.usersStatistics" />
+        <UserActiveDoughnutChart :force-fetch="false" />
     </v-col>
 </v-row>
 
@@ -48,7 +49,7 @@ const authStore = useAuthStore();
 
 onMounted(async () => {
     await Promise.allSettled([
-       usersStore.fetchUserStatistics(),
+       usersStore.fetchUsersStatistics(),
        usersStore.fetchUsersRegistrationsTrend(),
     ]);
 });

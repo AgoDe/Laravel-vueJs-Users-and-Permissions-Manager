@@ -244,6 +244,7 @@ const submitUser = async () => {
 
 const onCancel = () => {
   userForm.value.reset();
+  props.initialData = undefined;  
   emit("cancel");
   emit("close-dialog");
 };

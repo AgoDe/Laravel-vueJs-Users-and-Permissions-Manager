@@ -31,27 +31,37 @@ Before you start, make sure you have **PHP**, **Composer**, and **Node.js** inst
     ```bash
     cd UPManager-api
     ```
-2. Install PHP dependencies:
+2. Copy the example environment file and create your `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+3. Install PHP dependencies:
     ```bash
     composer install
     ```
-3. Run database migrations:
+4. Run database migrations:
+
+    > **Alert:**  
+    > Before running migrations, ensure that your PostgreSQL database connection is properly configured and the database server is running. Double-check your `.env` file for correct database credentials and verify that the required PHP extensions are enabled.  
     ```bash
     php artisan migrate
     ```
-4. Seed the database with initial data:
+5. Seed the database with initial data:
     ```bash
     php artisan db:seed
     ```
-5. Generate the application key:
+6. Generate the application key:
     ```bash
     php artisan key:generate
     ```
-6. Start the backend server:
+7. Start the backend server:
     ```bash
     php artisan serve
     ```
     The backend will be running on [http://localhost:8000](http://localhost:8000).
+
+
+---
 
 ### 2. Frontend Setup (`UPManager-frontend`)
 
